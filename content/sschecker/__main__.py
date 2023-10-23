@@ -173,7 +173,6 @@ def validate_dict(data, patterns):
     missing_keys = set(patterns.keys()) - set(data.keys())
 
     for field, pattern in patterns.items():
-        print (field, pattern)
         if field not in data:
             missing_keys.add(field)
         elif isinstance(pattern, str):
