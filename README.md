@@ -12,8 +12,8 @@ This utility provides sanity checks for NSWHP customised TSO500 samplesheet befo
 
 |**Version**|**Status**|**Description**|
 |--|--|--|
-|np.v0.9||A tool to check the integrity of a sample sheet|
-|np.v0.9.1||Infrastruture upgrade|
+|np.v0.9|[![Build](https://github.com/NSWHP-Genomics/SampleSheetChecker/actions/workflows/deploy.yml/badge.svg?branch=develop)](https://github.com/NSWHP-Genomics/SampleSheetChecker/actions/workflows/deploy.yml)|A tool to check the integrity of a sample sheet|
+|np.v0.9.1|[![Build and Deploy](https://github.com/NSWHP-Genomics/SampleSheetChecker/actions/workflows/deploy.yml/badge.svg?branch=develop)](https://github.com/NSWHP-Genomics/SampleSheetChecker/actions/workflows/deploy.yml)|Infrastruture upgrade|
 
 ## Requirements
 
