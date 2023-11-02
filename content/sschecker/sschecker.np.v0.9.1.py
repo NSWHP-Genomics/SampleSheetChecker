@@ -12,6 +12,8 @@ import samplesheetparser as parser
 from schema import header_patterns, reads_patterns, settings_patterns, site_patterns, bclconvert_settings_patterns
 from schema import data_patterns, bclconvert_data_patterns
 
+import __main__
+
 def parse_arguments():
 
     argsparser = argparse.ArgumentParser()
@@ -19,6 +21,10 @@ def parse_arguments():
     argsparser.add_argument(
             "-s", "--samplesheet", required=True,
             help="samplesheet"
+    )
+    argsparser.add_argument(
+            "-u", "--udp", default="TSO-novaseq-UDP_v1.5_chemistry.csv",
+            help="udp tag registry file"
     )
     argsparser.add_argument(
             "-o", "--output", default="report",
@@ -29,7 +35,7 @@ def parse_arguments():
 
     return args
 
-def main(samplesheet, output="report"):
+def main(samplesheet:str, udp:str):
     samplesheet = parser.SampleSheet(samplesheet)
     
     samplesheet_data = pd.DataFrame(samplesheet.data)
@@ -123,7 +129,9 @@ def main(samplesheet, output="report"):
     print ("---------------------------------------------------------------")
     
     ## validating index and index2
-    indexData = parser.parse_index_data("TSO-novaseq-UDP_v1.5_chemistry.csv")
+    main_path = os.path.dirname(os.path.abspath(__main__.__file__))
+    udp_rela_path = os.path.join(main_path, udp)
+    indexData = parser.parse_index_data(os.path.abspath(udp_rela_path))
 
     if not all(samplesheet_data['index'].isin(indexData['index'])):
        raise Exception (f"index is not valid")
@@ -228,4 +236,4 @@ def is_series_ordered(series):
 if __name__ == "__main__":
 
     args = parse_arguments()
-    main(args.samplesheet, args.output)
+    main(args.samplesheet, args.udp)
