@@ -6,7 +6,7 @@ import re
 # Define regular expression patterns for Header
 header_patterns = {
     'FileFormatVersion': re.compile(r'^[0-9]+$'),  # Matches one or more digits
-    'Investigator Name': re.compile(r'^[A-Za-z]+(_([A-Za-z]+))?'),  # Assuming alphabetic letters only
+    'Investigator Name': re.compile(r'^[A-Za-z ]+$'),  # Assuming alphabetic letters only
     'RunName': re.compile(r'^\d{6}_\d{2}$'),  # Format: 6 digits, underscore, 2 digits
     'Date': re.compile(r'^\d{1,2}/\d{1,2}/\d{4}$'),  # Format: 2 digits, slash, 2 digits, slash, 4 digits
     'InstrumentType': 'NovaSeq6000',
