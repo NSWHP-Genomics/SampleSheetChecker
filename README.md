@@ -1,14 +1,19 @@
-# JupyterLite Demo
+# TSO500 Samplesheet Sanity Checker
 
-[![lite-badge](https://jupyterlite.rtfd.io/en/latest/_static/badge.svg)](https://jupyterlite.github.io/demo)
+This utility provides sanity checks for NSWHP customised TSO500 samplesheet before NovaSeq sequencing. The stack is deployed as a static site to GitHub Pages via JuptyerLite framework.
 
-JupyterLite deployed as a static site to GitHub Pages, for demo purposes.
+## Build Status
+|**Branch**|**Status**|**Description**|
+|--|--|--|
+|main| - | - |
+|develop|[![Build and Deploy](https://github.com/NSWHP-Genomics/SampleSheetChecker/actions/workflows/deploy.yml/badge.svg?branch=develop)](https://github.com/NSWHP-Genomics/SampleSheetChecker/actions/workflows/deploy.yml)| Live from Dev |
 
-## ✨ Try it in your browser ✨
+## SampleSheetChecker
 
-➡️ **https://jupyterlite.github.io/demo**
-
-![github-pages](https://user-images.githubusercontent.com/591645/120649478-18258400-c47d-11eb-80e5-185e52ff2702.gif)
+|**Version**|**Status**|**Description**|
+|--|--|--|
+|np.v0.9|[![Build](https://github.com/NSWHP-Genomics/SampleSheetChecker/actions/workflows/deploy.yml/badge.svg?branch=develop)](https://github.com/NSWHP-Genomics/SampleSheetChecker/actions/workflows/deploy.yml)|A tool to check the integrity of a sample sheet|
+|np.v0.9.1|[![Build and Deploy](https://github.com/NSWHP-Genomics/SampleSheetChecker/actions/workflows/deploy.yml/badge.svg?branch=develop)](https://github.com/NSWHP-Genomics/SampleSheetChecker/actions/workflows/deploy.yml)|Infrastruture upgrade|
 
 ## Requirements
 
@@ -17,13 +22,3 @@ JupyterLite is being tested against modern web browsers:
 - Firefox 90+
 - Chromium 89+
 
-## Deploy your JupyterLite website on GitHub Pages
-
-Check out the guide on the JupyterLite documentation: https://jupyterlite.readthedocs.io/en/latest/quickstart/deploy.html
-
-## Further Information and Updates
-
-For more info, keep an eye on the JupyterLite documentation:
-
-- How-to Guides: https://jupyterlite.readthedocs.io/en/latest/howto/index.html
-- Reference: https://jupyterlite.readthedocs.io/en/latest/reference/index.html
