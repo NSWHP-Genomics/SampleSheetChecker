@@ -116,7 +116,41 @@ def main(samplesheet:str, udp:str):
         raise Exception (f"Invalid Entry: {invalid_keys}")
     else:
         print("> Data structure is valid")
-        
+        print ("---------------------------------------------------------------")
+
+    ## validating D/R pair
+    sampleIDs = samplesheet_data['Sample_ID']
+    sampleIds = sampleIDs.tolist()
+    duplicateIds = sampleIDs[sampleIDs.duplicated()].tolist()
+    if len(duplicateIds) > 0:
+        print ('---------------------------------------------------------------')
+        raise Exception (f"Sample_ID is not unique: {duplicateIds}")
+        print ('---------------------------------------------------------------')
+    else:
+        print("> All samples are unique")
+        print ("---------------------------------------------------------------")
+
+    for sampleId in sampleIds:
+        sampleDomain = sampleId[:-2]
+        match sampleId[-2:]:
+            case "-D":
+                if sampleDomain+"-R" not in sampleIds:
+                    print ('---------------------------------------------------------------')
+                    raise Exception (f"RNA sample pair for DNA sample: {sampleId} is required")
+                    print ('---------------------------------------------------------------')
+            case "-R":
+                if sampleDomain+'-D' not in sampleIds:
+                    print ('---------------------------------------------------------------')
+                    raise Exception (f"DNA sample pair for RNA sample: {sampleId} is required")
+                    print ('---------------------------------------------------------------')
+            case _:
+                print ('---------------------------------------------------------------')
+                raise Exception (f"Sample format need to be either DNA or RNA")
+                print ('---------------------------------------------------------------')
+    print("> All samples pair D/R checked")
+    print ("---------------------------------------------------------------")
+
+
     ## validating index_ID, I7_index_ID and I5_index_ID order
     if not is_series_ordered(samplesheet_data.Index_ID):
         raise Exception (f"Index_ID is not ordered")
@@ -140,6 +174,8 @@ def main(samplesheet:str, udp:str):
 
     print ("> index and index2 are valid")
     print ("---------------------------------------------------------------")
+    
+    
     print (">> Data is valid")
     print("===============================================================")
     
