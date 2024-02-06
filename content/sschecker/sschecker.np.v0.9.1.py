@@ -119,13 +119,15 @@ def main(samplesheet:str, udp:str):
         print ("---------------------------------------------------------------")
 
     ## validating D/R pair
+    drInvalidCounter = 0
     sampleIDs = samplesheet_data['Sample_ID']
     sampleIds = sampleIDs.tolist()
     duplicateIds = sampleIDs[sampleIDs.duplicated()].tolist()
     if len(duplicateIds) > 0:
-        print ('---------------------------------------------------------------')
-        raise Exception (f"Sample_ID is not unique: {duplicateIds}")
-        print ('---------------------------------------------------------------')
+        print ('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+        print (f"Sample_ID is not unique: {duplicateIds}")
+        drInvalidCounter += 1
+        print ('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
     else:
         print("> All samples are unique")
         print ("---------------------------------------------------------------")
@@ -135,32 +137,46 @@ def main(samplesheet:str, udp:str):
         match sampleId[-2:]:
             case "-D":
                 if sampleDomain+"-R" not in sampleIds:
-                    print ('---------------------------------------------------------------')
-                    raise Exception (f"RNA sample pair for DNA sample: {sampleId} is required")
-                    print ('---------------------------------------------------------------')
+                    print ('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+                    print (f"RNA sample pair for DNA sample: {sampleId} is required")
+                    drInvalidCounter += 1
+                    print ('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
             case "-R":
                 if sampleDomain+'-D' not in sampleIds:
-                    print ('---------------------------------------------------------------')
-                    raise Exception (f"DNA sample pair for RNA sample: {sampleId} is required")
-                    print ('---------------------------------------------------------------')
+                    print ('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+                    print (f"DNA sample pair for RNA sample: {sampleId} is required")
+                    drInvalidCounter += 1
+                    print ('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
             case _:
                 print ('---------------------------------------------------------------')
                 raise Exception (f"Sample format need to be either DNA or RNA")
                 print ('---------------------------------------------------------------')
-    print("> All samples pair D/R checked")
-    print ("---------------------------------------------------------------")
-
+                
+    if drInvalidCounter == 0:
+        print("> All samples pair D/R checked")
+        print ("---------------------------------------------------------------")
 
     ## validating index_ID, I7_index_ID and I5_index_ID order
+    drInvalidIndex = 0
     if not is_series_ordered(samplesheet_data.Index_ID):
-        raise Exception (f"Index_ID is not ordered")
+        print ('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+        print (f"Index_ID is not ordered")
+        print ('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+        drInvalidIndex += 1
     if not is_series_ordered(samplesheet_data['I7_Index_ID']):
-        raise Exception (f"I7_Index_ID is not ordered")
+        print ('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+        print (f"I7_Index_ID is not ordered")
+        print ('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+        drInvalidIndex += 1
     if not is_series_ordered(samplesheet_data['I5_Index_ID']):
-        raise Exception (f"I5_Index_ID is not ordered")
-    
-    print ("> Index_ID, I7_Index_ID and I5_Index_ID are ordered")
-    print ("---------------------------------------------------------------")
+        print ('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+        print (f"I5_Index_ID is not ordered")
+        print ('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+        drInvalidIndex += 1
+
+    if drInvalidIndex == 0:
+        print ("> Index_ID, I7_Index_ID and I5_Index_ID are ordered")
+        print ("---------------------------------------------------------------")
     
     ## validating index and index2
     main_path = os.path.dirname(os.path.abspath(__main__.__file__))
@@ -168,12 +184,23 @@ def main(samplesheet:str, udp:str):
     indexData = parser.parse_index_data(os.path.abspath(udp_rela_path))
 
     if not all(samplesheet_data['index'].isin(indexData['index'])):
-       raise Exception (f"index is not valid")
+        print ('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+        print (f"index is not valid")
+        print ('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+        drInvalidIndex += 1
     if not all(samplesheet_data['index2'].isin(indexData['index2'])):
-        raise Exception (f"index2 is not valid")
-
-    print ("> index and index2 are valid")
-    print ("---------------------------------------------------------------")
+        print ('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+        print (f"index2 is not valid")
+        print ('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+        drInvalidIndex += 1
+                        
+    if drInvalidCounter == 0 and drInvalidIndex == 0:
+        print ("---------------------------------------------------------------")
+        print ("> index and index2 are valid")
+        print ("---------------------------------------------------------------")
+    else:
+        print ('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+        raise Exception (f"A total of {drInvalidCounter+drInvalidIndex} exceptions detected for D/R sample pairs, please refer to details above")
     
     
     print (">> Data is valid")
