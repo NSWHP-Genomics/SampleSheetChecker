@@ -27,6 +27,10 @@ def parse_arguments():
             help="udp tag registry file"
     )
     argsparser.add_argument(
+            "-m", "--mode", default="default",
+            help="sample index selection mode"
+    )
+    argsparser.add_argument(
             "-o", "--output", default="report",
             help="directory to store report"
     )
@@ -35,7 +39,7 @@ def parse_arguments():
 
     return args
 
-def main(samplesheet:str, udp:str):
+def main(samplesheet:str, udp:str, mode:str):
     samplesheet = parser.SampleSheet(samplesheet)
     
     samplesheet_data = pd.DataFrame(samplesheet.data)
@@ -157,24 +161,24 @@ def main(samplesheet:str, udp:str):
         print ("---------------------------------------------------------------")
 
     ## validating index_ID, I7_index_ID and I5_index_ID order
-    drInvalidIndex = 0
+    drIndexOrderN = 0
     if not is_series_ordered(samplesheet_data.Index_ID):
         print ('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
         print (f"Index_ID is not ordered")
         print ('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-        drInvalidIndex += 1
+        drIndexOrderN += 1
     if not is_series_ordered(samplesheet_data['I7_Index_ID']):
         print ('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
         print (f"I7_Index_ID is not ordered")
         print ('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-        drInvalidIndex += 1
+        drIndexOrderN += 1
     if not is_series_ordered(samplesheet_data['I5_Index_ID']):
         print ('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
         print (f"I5_Index_ID is not ordered")
         print ('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-        drInvalidIndex += 1
+        drIndexOrderN += 1
 
-    if drInvalidIndex == 0:
+    if drIndexOrderN == 0:
         print ("> Index_ID, I7_Index_ID and I5_Index_ID are ordered")
         print ("---------------------------------------------------------------")
     
@@ -182,7 +186,8 @@ def main(samplesheet:str, udp:str):
     main_path = os.path.dirname(os.path.abspath(__main__.__file__))
     udp_rela_path = os.path.join(main_path, udp)
     indexData = parser.parse_index_data(os.path.abspath(udp_rela_path))
-
+    drInvalidIndex = 0
+    
     if not all(samplesheet_data['index'].isin(indexData['index'])):
         print ('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
         print (f"index is not valid")
@@ -194,10 +199,14 @@ def main(samplesheet:str, udp:str):
         print ('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
         drInvalidIndex += 1
                         
-    if drInvalidCounter == 0 and drInvalidIndex == 0:
+    if drInvalidCounter == 0 and drInvalidIndex == 0 and drIndexOrderN == 0:
         print ("---------------------------------------------------------------")
         print ("> index and index2 are valid")
         print ("---------------------------------------------------------------")
+    elif drInvalidCounter == 0 and drInvalidIndex == 0 and drIndexOrderN != 0 and mode == 'skip':
+        print ('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+        print (f"{drIndexOrderN} Index Order Exceptions found, Ignore Index order ...")
+        print ('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')       
     else:
         print ('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
         raise Exception (f"A total of {drInvalidCounter+drInvalidIndex} exceptions detected for D/R sample pairs, please refer to details above")
@@ -299,4 +308,4 @@ def is_series_ordered(series):
 if __name__ == "__main__":
 
     args = parse_arguments()
-    main(args.samplesheet, args.udp)
+    main(args.samplesheet, args.udp, args.mode)
