@@ -209,7 +209,7 @@ def main(samplesheet:str, udp:str, mode:str):
         print ('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')       
     else:
         print ('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-        raise Exception (f"A total of {drInvalidCounter+drInvalidIndex} exceptions detected for D/R sample pairs, please refer to details above")
+        raise Exception (f"A total of {drInvalidCounter+drInvalidIndex+drIndexOrderN} exceptions detected for D/R sample pairs, please refer to details above")
     
     
     print (">> Data is valid")
